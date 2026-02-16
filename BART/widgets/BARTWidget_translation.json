@@ -1,0 +1,259 @@
+{
+  "en": {
+    "translation": {
+      "BART Train Times": "BART Train Times",
+      "BART Settings": "BART Settings",
+      "Background": "Background",
+      "Widget Personalization": "Widget Personalization",
+      "Station": "Station",
+      "Direction": "Direction",
+      "Max Trains Shown": "Max Trains Shown",
+      "Refresh Interval (seconds)": "Refresh Interval (seconds)",
+      "BART API Key (optional)": "BART API Key (optional)",
+      "Background Image": "Background Image",
+      "Glass Blur": "Glass Blur",
+      "Background Brightness": "Background Brightness",
+      "Text Color": "Text Color",
+      "Accent Color": "Accent Color",
+      "Background Color": "Background Color",
+      "Background Transparency": "Background Transparency",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "de": {
+    "translation": {
+      "BART Train Times": "BART Zugzeiten",
+      "BART Settings": "BART-Einstellungen",
+      "Background": "Hintergrund",
+      "Widget Personalization": "Widget-Personalisierung",
+      "Station": "Station",
+      "Direction": "Richtung",
+      "Max Trains Shown": "Max. angezeigte Züge",
+      "Refresh Interval (seconds)": "Aktualisierungsintervall (Sekunden)",
+      "BART API Key (optional)": "BART-API-Schlüssel (optional)",
+      "Background Image": "Hintergrundbild",
+      "Glass Blur": "Glas-Unschärfe",
+      "Background Brightness": "Hintergrundhelligkeit",
+      "Text Color": "Textfarbe",
+      "Accent Color": "Akzentfarbe",
+      "Background Color": "Hintergrundfarbe",
+      "Background Transparency": "Hintergrundtransparenz",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "es": {
+    "translation": {
+      "BART Train Times": "Horarios de tren BART",
+      "BART Settings": "Ajustes de BART",
+      "Background": "Fondo",
+      "Widget Personalization": "Personalización del widget",
+      "Station": "Estación",
+      "Direction": "Dirección",
+      "Max Trains Shown": "Máx. trenes mostrados",
+      "Refresh Interval (seconds)": "Intervalo de actualización (segundos)",
+      "BART API Key (optional)": "Clave API de BART (opcional)",
+      "Background Image": "Imagen de fondo",
+      "Glass Blur": "Desenfoque de cristal",
+      "Background Brightness": "Brillo del fondo",
+      "Text Color": "Color del texto",
+      "Accent Color": "Color de acento",
+      "Background Color": "Color de fondo",
+      "Background Transparency": "Transparencia del fondo",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "fr": {
+    "translation": {
+      "BART Train Times": "Horaires des trains BART",
+      "BART Settings": "Paramètres BART",
+      "Background": "Arrière-plan",
+      "Widget Personalization": "Personnalisation du widget",
+      "Station": "Station",
+      "Direction": "Direction",
+      "Max Trains Shown": "Nombre max. de trains",
+      "Refresh Interval (seconds)": "Intervalle d’actualisation (secondes)",
+      "BART API Key (optional)": "Clé API BART (facultatif)",
+      "Background Image": "Image d’arrière-plan",
+      "Glass Blur": "Flou du verre",
+      "Background Brightness": "Luminosité de l’arrière-plan",
+      "Text Color": "Couleur du texte",
+      "Accent Color": "Couleur d’accent",
+      "Background Color": "Couleur d’arrière-plan",
+      "Background Transparency": "Transparence de l’arrière-plan",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "it": {
+    "translation": {
+      "BART Train Times": "Orari dei treni BART",
+      "BART Settings": "Impostazioni BART",
+      "Background": "Sfondo",
+      "Widget Personalization": "Personalizzazione widget",
+      "Station": "Stazione",
+      "Direction": "Direzione",
+      "Max Trains Shown": "Max treni mostrati",
+      "Refresh Interval (seconds)": "Intervallo di aggiornamento (secondi)",
+      "BART API Key (optional)": "Chiave API BART (opzionale)",
+      "Background Image": "Immagine di sfondo",
+      "Glass Blur": "Sfocatura vetro",
+      "Background Brightness": "Luminosità sfondo",
+      "Text Color": "Colore testo",
+      "Accent Color": "Colore accento",
+      "Background Color": "Colore sfondo",
+      "Background Transparency": "Trasparenza sfondo",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "ja": {
+    "translation": {
+      "BART Train Times": "BART 列車時刻",
+      "BART Settings": "BART 設定",
+      "Background": "背景",
+      "Widget Personalization": "ウィジェットのパーソナライズ",
+      "Station": "駅",
+      "Direction": "方向",
+      "Max Trains Shown": "表示する列車数（最大）",
+      "Refresh Interval (seconds)": "更新間隔（秒）",
+      "BART API Key (optional)": "BART API キー（任意）",
+      "Background Image": "背景画像",
+      "Glass Blur": "ガラスぼかし",
+      "Background Brightness": "背景の明るさ",
+      "Text Color": "文字色",
+      "Accent Color": "アクセントカラー",
+      "Background Color": "背景色",
+      "Background Transparency": "背景の透明度",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "ko": {
+    "translation": {
+      "BART Train Times": "BART 열차 시간",
+      "BART Settings": "BART 설정",
+      "Background": "배경",
+      "Widget Personalization": "위젯 개인화",
+      "Station": "역",
+      "Direction": "방향",
+      "Max Trains Shown": "표시할 열차 최대 개수",
+      "Refresh Interval (seconds)": "새로고침 간격(초)",
+      "BART API Key (optional)": "BART API 키(선택 사항)",
+      "Background Image": "배경 이미지",
+      "Glass Blur": "유리 흐림",
+      "Background Brightness": "배경 밝기",
+      "Text Color": "텍스트 색상",
+      "Accent Color": "강조 색상",
+      "Background Color": "배경 색상",
+      "Background Transparency": "배경 투명도",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "pt": {
+    "translation": {
+      "BART Train Times": "Horários do trem BART",
+      "BART Settings": "Configurações do BART",
+      "Background": "Plano de fundo",
+      "Widget Personalization": "Personalização do widget",
+      "Station": "Estação",
+      "Direction": "Direção",
+      "Max Trains Shown": "Máx. de trens exibidos",
+      "Refresh Interval (seconds)": "Intervalo de atualização (segundos)",
+      "BART API Key (optional)": "Chave de API do BART (opcional)",
+      "Background Image": "Imagem de fundo",
+      "Glass Blur": "Desfoque do vidro",
+      "Background Brightness": "Brilho do fundo",
+      "Text Color": "Cor do texto",
+      "Accent Color": "Cor de destaque",
+      "Background Color": "Cor de fundo",
+      "Background Transparency": "Transparência do fundo",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "ru": {
+    "translation": {
+      "BART Train Times": "Расписание поездов BART",
+      "BART Settings": "Настройки BART",
+      "Background": "Фон",
+      "Widget Personalization": "Персонализация виджета",
+      "Station": "Станция",
+      "Direction": "Направление",
+      "Max Trains Shown": "Макс. число поездов",
+      "Refresh Interval (seconds)": "Интервал обновления (секунды)",
+      "BART API Key (optional)": "Ключ API BART (необязательно)",
+      "Background Image": "Фоновое изображение",
+      "Glass Blur": "Размытие стекла",
+      "Background Brightness": "Яркость фона",
+      "Text Color": "Цвет текста",
+      "Accent Color": "Акцентный цвет",
+      "Background Color": "Цвет фона",
+      "Background Transparency": "Прозрачность фона",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "zh_CN": {
+    "translation": {
+      "BART Train Times": "BART 列车时间",
+      "BART Settings": "BART 设置",
+      "Background": "背景",
+      "Widget Personalization": "小组件个性化",
+      "Station": "车站",
+      "Direction": "方向",
+      "Max Trains Shown": "显示列车数量上限",
+      "Refresh Interval (seconds)": "刷新间隔（秒）",
+      "BART API Key (optional)": "BART API 密钥（可选）",
+      "Background Image": "背景图片",
+      "Glass Blur": "玻璃模糊",
+      "Background Brightness": "背景亮度",
+      "Text Color": "文字颜色",
+      "Accent Color": "强调色",
+      "Background Color": "背景颜色",
+      "Background Transparency": "背景透明度",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "zh_TW": {
+    "translation": {
+      "BART Train Times": "BART 列車時間",
+      "BART Settings": "BART 設定",
+      "Background": "背景",
+      "Widget Personalization": "小工具個人化",
+      "Station": "車站",
+      "Direction": "方向",
+      "Max Trains Shown": "顯示列車數量上限",
+      "Refresh Interval (seconds)": "更新間隔（秒）",
+      "BART API Key (optional)": "BART API 金鑰（選用）",
+      "Background Image": "背景圖片",
+      "Glass Blur": "玻璃模糊",
+      "Background Brightness": "背景亮度",
+      "Text Color": "文字顏色",
+      "Accent Color": "重點色彩",
+      "Background Color": "背景顏色",
+      "Background Transparency": "背景透明度",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "uk": {
+    "translation": {
+      "BART Train Times": "Розклад поїздів BART",
+      "BART Settings": "Налаштування BART",
+      "Background": "Фон",
+      "Widget Personalization": "Персоналізація віджета",
+      "Station": "Станція",
+      "Direction": "Напрямок",
+      "Max Trains Shown": "Макс. кількість поїздів",
+      "Refresh Interval (seconds)": "Інтервал оновлення (секунди)",
+      "BART API Key (optional)": "Ключ API BART (необов’язково)",
+      "Background Image": "Фонове зображення",
+      "Glass Blur": "Розмиття скла",
+      "Background Brightness": "Яскравість фону",
+      "Text Color": "Колір тексту",
+      "Accent Color": "Акцентний колір",
+      "Background Color": "Колір фону",
+      "Background Transparency": "Прозорість фону",
+      "Custom Style": "Custom Style"
+    }
+  },
+  "en_FAKE": {
+    "translation": {
+      "Custom Style": "Custom Style"
+    }
+  }
+}

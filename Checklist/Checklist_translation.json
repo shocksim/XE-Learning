@@ -1,0 +1,213 @@
+{
+  "en": {
+    "translation": {
+      "Checklist": "Checklist",
+      "Productivity": "Productivity",
+      "Background Image": "Background Image",
+      "Glass Blur": "Glass Blur",
+      "Background Brightness": "Background Brightness",
+      "Text Color": "Text Color",
+      "Accent Color": "Accent Color",
+      "Background": "Background",
+      "Transparency": "Transparency",
+      "Widget Personalization": "Widget Personalization",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "de": {
+    "translation": {
+      "Checklist": "Checkliste",
+      "Productivity": "Produktivität",
+      "Background Image": "Hintergrundbild",
+      "Glass Blur": "Glasunschärfe",
+      "Background Brightness": "Hintergrund-Helligkeit",
+      "Text Color": "Textfarbe",
+      "Accent Color": "Akzentfarbe",
+      "Background": "Hintergrund",
+      "Transparency": "Transparenz",
+      "Widget Personalization": "Widget-Personalisierung",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "fr": {
+    "translation": {
+      "Checklist": "Liste de contrôle",
+      "Productivity": "Productivité",
+      "Background Image": "Image d'arrière-plan",
+      "Glass Blur": "Flou du verre",
+      "Background Brightness": "Luminosité de l'arrière-plan",
+      "Text Color": "Couleur du texte",
+      "Accent Color": "Couleur d'accent",
+      "Background": "Arrière-plan",
+      "Transparency": "Transparence",
+      "Widget Personalization": "Personnalisation du widget",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "es": {
+    "translation": {
+      "Checklist": "Lista de verificación",
+      "Productivity": "Productividad",
+      "Background Image": "Imagen de fondo",
+      "Glass Blur": "Desenfoque de vidrio",
+      "Background Brightness": "Brillo del fondo",
+      "Text Color": "Color del texto",
+      "Accent Color": "Color de acento",
+      "Background": "Fondo",
+      "Transparency": "Transparencia",
+      "Widget Personalization": "Personalización del widget",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "it": {
+    "translation": {
+      "Checklist": "Lista di controllo",
+      "Productivity": "Produttività",
+      "Background Image": "Immagine di sfondo",
+      "Glass Blur": "Sfocatura vetro",
+      "Background Brightness": "Luminosità dello sfondo",
+      "Text Color": "Colore del testo",
+      "Accent Color": "Colore accento",
+      "Background": "Sfondo",
+      "Transparency": "Trasparenza",
+      "Widget Personalization": "Personalizzazione widget",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "pt": {
+    "translation": {
+      "Checklist": "Lista de verificação",
+      "Productivity": "Produtividade",
+      "Background Image": "Imagem de fundo",
+      "Glass Blur": "Desfoque do vidro",
+      "Background Brightness": "Brilho do fundo",
+      "Text Color": "Cor do texto",
+      "Accent Color": "Cor de destaque",
+      "Background": "Fundo",
+      "Transparency": "Transparência",
+      "Widget Personalization": "Personalização do widget",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "ru": {
+    "translation": {
+      "Checklist": "Контрольный список",
+      "Productivity": "Продуктивность",
+      "Background Image": "Фоновое изображение",
+      "Glass Blur": "Размытие стекла",
+      "Background Brightness": "Яркость фона",
+      "Text Color": "Цвет текста",
+      "Accent Color": "Цвет акцента",
+      "Background": "Фон",
+      "Transparency": "Прозрачность",
+      "Widget Personalization": "Персонализация виджета",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "ja": {
+    "translation": {
+      "Checklist": "チェックリスト",
+      "Productivity": "生産性",
+      "Background Image": "背景画像",
+      "Glass Blur": "ガラスぼかし",
+      "Background Brightness": "背景の明るさ",
+      "Text Color": "テキストカラー",
+      "Accent Color": "アクセントカラー",
+      "Background": "背景",
+      "Transparency": "透明度",
+      "Widget Personalization": "ウィジェットのカスタマイズ",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "ko": {
+    "translation": {
+      "Checklist": "체크리스트",
+      "Productivity": "생산성",
+      "Background Image": "배경 이미지",
+      "Glass Blur": "유리 흐림",
+      "Background Brightness": "배경 밝기",
+      "Text Color": "텍스트 색상",
+      "Accent Color": "강조 색상",
+      "Background": "배경",
+      "Transparency": "투명도",
+      "Widget Personalization": "위젯 개인 설정",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "zh_CN": {
+    "translation": {
+      "Checklist": "清单",
+      "Productivity": "生产力",
+      "Background Image": "背景图像",
+      "Glass Blur": "玻璃模糊",
+      "Background Brightness": "背景亮度",
+      "Text Color": "文本颜色",
+      "Accent Color": "强调颜色",
+      "Background": "背景",
+      "Transparency": "透明度",
+      "Widget Personalization": "小组件个性化",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "zh_TW": {
+    "translation": {
+      "Checklist": "清單",
+      "Productivity": "生產力",
+      "Background Image": "背景圖片",
+      "Glass Blur": "玻璃模糊",
+      "Background Brightness": "背景亮度",
+      "Text Color": "文字顏色",
+      "Accent Color": "重點色彩",
+      "Background": "背景",
+      "Transparency": "透明度",
+      "Widget Personalization": "小工具個人化",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "uk": {
+    "translation": {
+      "Checklist": "Контрольний список",
+      "Productivity": "Продуктивність",
+      "Background Image": "Фонове зображення",
+      "Glass Blur": "Розмиття скла",
+      "Background Brightness": "Яскравість фону",
+      "Text Color": "Колір тексту",
+      "Accent Color": "Акцентний колір",
+      "Background": "Фон",
+      "Transparency": "Прозорість",
+      "Widget Personalization": "Персоналізація віджета",
+      "Checklist Options": "Checklist Options",
+      "Show Delete Buttons": "Show Delete Buttons",
+      "Delete": "Delete"
+    }
+  },
+  "en_FAKE": {
+    "translation": {
+      "Checklist Options": "",
+      "Show Delete Buttons": "",
+      "Delete": ""
+    }
+  }
+}

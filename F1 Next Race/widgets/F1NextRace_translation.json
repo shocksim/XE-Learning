@@ -1,0 +1,287 @@
+{
+  "en": {
+    "translation": {
+      "F1 Next": "F1 Next",
+      "Race Settings": "Race Settings",
+      "24-Hour Mode": "24-Hour Mode",
+      "Time Zone (City + UTC Offset)": "Time Zone (City + UTC Offset)",
+      "Time Zone": "Time Zone",
+      "Auto (System)": "Auto (System)",
+      "UTC": "UTC",
+      "Show Track Outline": "Show Track Outline",
+      "Background Image": "Background Image",
+      "Glass Blur": "Glass Blur",
+      "Widget Personalization": "Widget Personalization",
+      "Text Color": "Text Color",
+      "Accent Color": "Accent Color",
+      "Background": "Background",
+      "Widget Transparency": "Widget Transparency",
+      "On": "On",
+      "Off": "Off"
+    }
+  },
+
+  "de": {
+    "translation": {
+      "F1 Next": "F1 Nächstes",
+      "Race Settings": "Rennen-Einstellungen",
+      "24-Hour Mode": "24-Stunden-Modus",
+      "Time Zone (City + UTC Offset)": "Zeitzone (Stadt + UTC-Versatz)",
+      "Time Zone": "Zeitzone",
+      "Auto (System)": "Auto (System)",
+      "UTC": "UTC",
+      "Show Track Outline": "Strecken-Umriss anzeigen",
+      "Background Image": "Hintergrundbild",
+      "Glass Blur": "Glasunschärfe",
+      "Widget Personalization": "Widget-Personalisierung",
+      "Text Color": "Textfarbe",
+      "Accent Color": "Akzentfarbe",
+      "Background": "Hintergrund",
+      "Widget Transparency": "Widget-Transparenz",
+      "On": "Ein",
+      "Off": "Aus"
+    }
+  },
+
+  "fr": {
+    "translation": {
+      "F1 Next": "F1 Suivant",
+      "Race Settings": "Paramètres de course",
+      "24-Hour Mode": "Mode 24 heures",
+      "Time Zone (City + UTC Offset)": "Fuseau horaire (ville + décalage UTC)",
+      "Time Zone": "Fuseau horaire",
+      "Auto (System)": "Auto (système)",
+      "UTC": "UTC",
+      "Show Track Outline": "Afficher le tracé du circuit",
+      "Background Image": "Image d’arrière-plan",
+      "Glass Blur": "Flou du verre",
+      "Widget Personalization": "Personnalisation du widget",
+      "Text Color": "Couleur du texte",
+      "Accent Color": "Couleur d’accentuation",
+      "Background": "Arrière-plan",
+      "Widget Transparency": "Transparence du widget",
+      "On": "Activé",
+      "Off": "Désactivé"
+    }
+  },
+
+  "es": {
+    "translation": {
+      "F1 Next": "F1 Próxima",
+      "Race Settings": "Ajustes de carrera",
+      "24-Hour Mode": "Modo de 24 horas",
+      "Time Zone (City + UTC Offset)": "Zona horaria (ciudad + desfase UTC)",
+      "Time Zone": "Zona horaria",
+      "Auto (System)": "Auto (sistema)",
+      "UTC": "UTC",
+      "Show Track Outline": "Mostrar trazado del circuito",
+      "Background Image": "Imagen de fondo",
+      "Glass Blur": "Desenfoque de cristal",
+      "Widget Personalization": "Personalización del widget",
+      "Text Color": "Color del texto",
+      "Accent Color": "Color de acento",
+      "Background": "Fondo",
+      "Widget Transparency": "Transparencia del widget",
+      "On": "Activado",
+      "Off": "Desactivado"
+    }
+  },
+
+  "it": {
+    "translation": {
+      "F1 Next": "F1 Prossima",
+      "Race Settings": "Impostazioni gara",
+      "24-Hour Mode": "Modalità 24 ore",
+      "Time Zone (City + UTC Offset)": "Fuso orario (città + offset UTC)",
+      "Time Zone": "Fuso orario",
+      "Auto (System)": "Auto (sistema)",
+      "UTC": "UTC",
+      "Show Track Outline": "Mostra tracciato circuito",
+      "Background Image": "Immagine di sfondo",
+      "Glass Blur": "Sfocatura vetro",
+      "Widget Personalization": "Personalizzazione widget",
+      "Text Color": "Colore testo",
+      "Accent Color": "Colore accento",
+      "Background": "Sfondo",
+      "Widget Transparency": "Trasparenza widget",
+      "On": "Attivo",
+      "Off": "Disattivo"
+    }
+  },
+
+  "pt": {
+    "translation": {
+      "F1 Next": "F1 Próxima",
+      "Race Settings": "Configurações da corrida",
+      "24-Hour Mode": "Modo 24 horas",
+      "Time Zone (City + UTC Offset)": "Fuso horário (cidade + deslocamento UTC)",
+      "Time Zone": "Fuso horário",
+      "Auto (System)": "Auto (sistema)",
+      "UTC": "UTC",
+      "Show Track Outline": "Mostrar contorno da pista",
+      "Background Image": "Imagem de fundo",
+      "Glass Blur": "Desfoque de vidro",
+      "Widget Personalization": "Personalização do widget",
+      "Text Color": "Cor do texto",
+      "Accent Color": "Cor de destaque",
+      "Background": "Plano de fundo",
+      "Widget Transparency": "Transparência do widget",
+      "On": "Ligado",
+      "Off": "Desligado"
+    }
+  },
+
+  "ru": {
+    "translation": {
+      "F1 Next": "F1 Далее",
+      "Race Settings": "Настройки гонки",
+      "24-Hour Mode": "24-часовой режим",
+      "Time Zone (City + UTC Offset)": "Часовой пояс (город + смещение UTC)",
+      "Time Zone": "Часовой пояс",
+      "Auto (System)": "Авто (система)",
+      "UTC": "UTC",
+      "Show Track Outline": "Показывать контур трассы",
+      "Background Image": "Фоновое изображение",
+      "Glass Blur": "Размытие стекла",
+      "Widget Personalization": "Персонализация виджета",
+      "Text Color": "Цвет текста",
+      "Accent Color": "Акцентный цвет",
+      "Background": "Фон",
+      "Widget Transparency": "Прозрачность виджета",
+      "On": "Вкл",
+      "Off": "Выкл"
+    }
+  },
+
+  "ja": {
+    "translation": {
+      "F1 Next": "F1 次",
+      "Race Settings": "レース設定",
+      "24-Hour Mode": "24時間表示",
+      "Time Zone (City + UTC Offset)": "タイムゾーン（都市 + UTC オフセット）",
+      "Time Zone": "タイムゾーン",
+      "Auto (System)": "自動（システム）",
+      "UTC": "UTC",
+      "Show Track Outline": "コース輪郭を表示",
+      "Background Image": "背景画像",
+      "Glass Blur": "ガラスぼかし",
+      "Widget Personalization": "ウィジェットのカスタマイズ",
+      "Text Color": "テキスト色",
+      "Accent Color": "アクセントカラー",
+      "Background": "背景",
+      "Widget Transparency": "ウィジェットの透明度",
+      "On": "オン",
+      "Off": "オフ"
+    }
+  },
+
+  "ko": {
+    "translation": {
+      "F1 Next": "F1 다음",
+      "Race Settings": "레이스 설정",
+      "24-Hour Mode": "24시간 모드",
+      "Time Zone (City + UTC Offset)": "시간대(도시 + UTC 오프셋)",
+      "Time Zone": "시간대",
+      "Auto (System)": "자동(시스템)",
+      "UTC": "UTC",
+      "Show Track Outline": "트랙 윤곽 표시",
+      "Background Image": "배경 이미지",
+      "Glass Blur": "유리 블러",
+      "Widget Personalization": "위젯 개인화",
+      "Text Color": "텍스트 색상",
+      "Accent Color": "강조 색상",
+      "Background": "배경",
+      "Widget Transparency": "위젯 투명도",
+      "On": "켜짐",
+      "Off": "꺼짐"
+    }
+  },
+
+  "zh_CN": {
+    "translation": {
+      "F1 Next": "F1 下一站",
+      "Race Settings": "比赛设置",
+      "24-Hour Mode": "24 小时制",
+      "Time Zone (City + UTC Offset)": "时区（城市 + UTC 偏移）",
+      "Time Zone": "时区",
+      "Auto (System)": "自动（系统）",
+      "UTC": "UTC",
+      "Show Track Outline": "显示赛道轮廓",
+      "Background Image": "背景图片",
+      "Glass Blur": "玻璃模糊",
+      "Widget Personalization": "小组件个性化",
+      "Text Color": "文字颜色",
+      "Accent Color": "强调色",
+      "Background": "背景",
+      "Widget Transparency": "小组件透明度",
+      "On": "开",
+      "Off": "关"
+    }
+  },
+
+  "zh_TW": {
+    "translation": {
+      "F1 Next": "F1 下一站",
+      "Race Settings": "賽事設定",
+      "24-Hour Mode": "24 小時制",
+      "Time Zone (City + UTC Offset)": "時區（城市 + UTC 偏移）",
+      "Time Zone": "時區",
+      "Auto (System)": "自動（系統）",
+      "UTC": "UTC",
+      "Show Track Outline": "顯示賽道輪廓",
+      "Background Image": "背景圖片",
+      "Glass Blur": "玻璃模糊",
+      "Widget Personalization": "小工具個人化",
+      "Text Color": "文字顏色",
+      "Accent Color": "重點色彩",
+      "Background": "背景",
+      "Widget Transparency": "小工具透明度",
+      "On": "開",
+      "Off": "關"
+    }
+  },
+
+  "uk": {
+    "translation": {
+      "F1 Next": "F1 Далі",
+      "Race Settings": "Налаштування гонки",
+      "24-Hour Mode": "24-годинний режим",
+      "Time Zone (City + UTC Offset)": "Часовий пояс (місто + зміщення UTC)",
+      "Time Zone": "Часовий пояс",
+      "Auto (System)": "Авто (система)",
+      "UTC": "UTC",
+      "Show Track Outline": "Показувати контур траси",
+      "Background Image": "Фонове зображення",
+      "Glass Blur": "Розмиття скла",
+      "Widget Personalization": "Персоналізація віджета",
+      "Text Color": "Колір тексту",
+      "Accent Color": "Акцентний колір",
+      "Background": "Фон",
+      "Widget Transparency": "Прозорість віджета",
+      "On": "Увімкнено",
+      "Off": "Вимкнено"
+    }
+  },
+
+  "en_FAKE": {
+    "translation": {
+      "F1 Next": "F1 NEXT OF MAXIMUM SPEED",
+      "Race Settings": "ABSOLUTE RACE SETTINGS ZONE",
+      "24-Hour Mode": "24-HOUR TIME OF PRECISION",
+      "Time Zone (City + UTC Offset)": "TIME ZONE (CITY + UTC POWER OFFSET)",
+      "Time Zone": "TIME ZONE",
+      "Auto (System)": "AUTO (SYSTEM BRAIN)",
+      "UTC": "UTC UNIVERSAL TIME CORE",
+      "Show Track Outline": "DISPLAY TRACK OUTLINE OF GLORY",
+      "Background Image": "BACKGROUND IMAGE OF VIBES",
+      "Glass Blur": "GLASS BLUR INTENSITY FIELD",
+      "Widget Personalization": "ULTIMATE WIDGET PERSONALIZATION",
+      "Text Color": "TEXT CHROMATIC ESSENCE",
+      "Accent Color": "ACCENT COLOR OF IMPORTANCE",
+      "Background": "BACKGROUND OF DRAMA",
+      "Widget Transparency": "WIDGET TRANSPARENCY FORCE",
+      "On": "ENGAGED",
+      "Off": "DISENGAGED"
+    }
+  }
+}

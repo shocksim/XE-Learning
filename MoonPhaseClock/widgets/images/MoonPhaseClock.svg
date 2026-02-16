@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 56">
+  <!-- single-color icon, transparent background -->
+  <path fill="#ffffff" d="M37 12c-10.5 0-19 8.5-19 19s8.5 19 19 19c6.3 0 11.9-3.1 15.4-7.9-1.7.5-3.6.8-5.4.8-10.5 0-19-8.5-19-19 0-7.3 4.1-13.6 10.1-16.8-0.7-.1-1.4-.1-2.1-.1z"/>
+  <path fill="#ffffff" opacity="0.55" d="M77 15h36a3 3 0 0 1 0 6H77a3 3 0 0 1 0-6zm0 10h28a3 3 0 0 1 0 6H77a3 3 0 0 1 0-6zm0 10h36a3 3 0 0 1 0 6H77a3 3 0 0 1 0-6z"/>
+</svg>

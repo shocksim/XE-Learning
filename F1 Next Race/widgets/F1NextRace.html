@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>tr('F1 Next')</title>
+  <link rel="icon" type="image/svg+xml" href="images/f1-next-race.svg">
+
+  <!-- Xeneon Edge restrictions -->
+  <meta name="x-icue-restrictions"
+        data-restrictions='[
+          { "device": "dashboard_lcd" }
+        ]'>
+
+  <!-- Timezone list shared with sports widgets for consistency. -->
+  <meta name="x-icue-module" content="modules/Timezones.mjs">
+
+  <!-- Widget settings -->
+  <meta name="x-icue-property" content="use24h"
+        data-label="tr('24-Hour Mode')"
+        data-type="combobox"
+        data-values="['On','Off']"
+        data-default="'On'">
+
+  <meta name="x-icue-property" content="timeZone"
+        data-label="tr('Timezone')"
+        data-type="combobox"
+        data-values="Timezones.getAvailableTimezones()"
+        data-default="Timezones.getDefaultTimezoneKey()">
+
+  <meta name="x-icue-property" content="showTrackOutline"
+        data-label="tr('Show Track Outline')"
+        data-type="switch"
+        data-default="true">
+
+  <meta name="x-icue-property" content="backgroundImage"
+        data-label="tr('Background Image')"
+        data-type="media-selector"
+        data-filters="['*.png','*.jpg','*.jpeg','*.webp']">
+
+  <meta name="x-icue-property" content="glassBlur"
+        data-label="tr('Glass Blur')"
+        data-type="slider"
+        data-default="10"
+        data-min="0"
+        data-max="30"
+        data-step="1">
+
+  <!-- REQUIRED personalization group (MUST be last). -->
+  <meta name="x-icue-property" content="textColor" data-label="tr('Text Color')" data-type="color" data-default="'#f5f5f7'">
+  <meta name="x-icue-property" content="accentColor" data-label="tr('Accent Color')" data-type="color" data-default="'#ff1801'">
+  <meta name="x-icue-property" content="backgroundColor" data-label="tr('Background')" data-type="color" data-default="'#0b0b12'">
+  <meta name="x-icue-property" content="transparency" data-label="tr('Widget Transparency')" data-type="slider"
+        data-default="88" data-min="0" data-max="100" data-step="1">
+
+  <script id="x-icue-groups" type="application/json">
+    [
+      {
+        "title": "tr('Race Settings')",
+        "properties": [
+          "use24h",
+          "timeZone",
+          "showTrackOutline"
+        ]
+      },
+      {
+        "title": "tr('Widget Personalization')",
+        "properties": [
+          "backgroundImage",
+          "glassBlur",
+          "textColor",
+          "accentColor",
+          "backgroundColor",
+          "transparency"
+        ]
+      }
+    ]
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="styles/F1NextRace.css">
+  <link rel="stylesheet" type="text/css" href="tools/media_editor/MediaEditor.css">
+  <script type="text/javascript" src="tools/media_editor/MediaEditor.js"></script>
+</head>
+<body>
+  <div class="surface">
+    <!-- Media background rendered by the shared media editor helper. -->
+    <div class="widget-background" aria-hidden="true">
+      <div id="media-background"></div>
+    </div>
+
+    <!-- XL view intentionally mirrors L layout for a stable, single-column hierarchy. -->
+    <div class="widget-card">
+      <!-- Race info -->
+      <div class="race-info">
+        <div class="race-title-row">
+          <!-- Combine GP and circuit name to conserve vertical space on smaller sizes. -->
+          <h1 class="race-title">
+            <span class="race-title-text" id="raceTitle">Loading...</span>
+            <span class="race-title-sep" aria-hidden="true">-</span>
+            <span class="race-title-circuit" id="trackNameHeader">Circuit</span>
+          </h1>
+          <div class="race-pills">
+            <!-- Broadcast services are a static hint for now; update when reliable feed is available. -->
+            <div class="broadcast-pill" id="broadcastInfo">F1TV · ESPN · Sky</div>
+            <div class="status-pill" id="statusPill">Loading</div>
+          </div>
+        </div>
+        <div class="race-meta" id="raceMeta">
+          <span id="raceLocation">--</span>
+          <span class="separator" aria-hidden="true">-</span>
+          <span id="raceDate">--</span>
+          <span class="separator" aria-hidden="true">-</span>
+          <span id="raceTime">--</span>
+        </div>
+      </div>
+
+      <!-- Track hero banner: blurred city photo + SVG track overlay -->
+      <div class="track-banner" id="trackBanner">
+        <div class="track-banner-bg no-image" id="trackBannerBg"></div>
+        <div class="track-banner-overlay"></div>
+        <div class="track-banner-content">
+          <div class="track-round" id="trackCountry">--</div>
+          <svg class="track-outline" viewBox="0 0 100 100" role="img" aria-label="Track outline">
+            <path id="trackPath" d="" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Countdown panel (pre-race) -->
+      <div class="countdown-panel" id="preRacePanel">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-line">
+              <span class="value" id="countDays">--</span>
+              <span class="label">Days</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-line">
+              <span class="value" id="countHours">--</span>
+              <span class="label">Hours</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-line">
+              <span class="value" id="countMinutes">--</span>
+              <span class="label">Min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live order panel (during/after race) -->
+      <div class="live-panel" id="livePanel">
+        <div class="live-grid">
+          <div class="live-message" id="liveMessage">Fetching live order...</div>
+          <ol class="order-list" id="orderList"></ol>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <span>Jolpica F1 API</span>
+        <span id="lastUpdated">Last update --</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ── iCUE Event Bridge ────────────────────────────── */
+    icueEvents = {
+      onDataUpdated: onIcueDataUpdated,
+      onICUEInitialized: onIcueInitialized
+    };
+
+    /* ── API Endpoints ────────────────────────────────── */
+    const API_NEXT = "https://api.jolpi.ca/ergast/f1/current/next.json";
+    const API_RESULTS = "https://api.jolpi.ca/ergast/f1/current/last/results.json";
+
+    /* ── Timing Constants ─────────────────────────────── */
+    const RACE_WINDOW_MS = 3 * 60 * 60 * 1000;
+    const NEXT_REFRESH_MS = 5 * 60 * 1000;
+    const LIVE_REFRESH_MS = 60 * 1000;
+    // Fixed count to keep live order layout predictable on the Edge display.
+    const MAX_LIVE_ORDER_COUNT = 6;
+
+    /* ── Track SVG Paths ──────────────────────────────── */
+    const TRACK_PATHS = {
+      bahrain: "M30,70 L25,65 L25,60 L30,55 L40,55 L45,50 L55,50 L60,55 L65,50 L75,50 L80,55 L80,65 L75,70 L65,70 L60,75 L50,75 L45,80 L30,80 Z",
+      jeddah: "M20,20 Q30,15 40,20 T60,30 T80,40 Q85,50 80,60 T60,80 T40,85 Q20,80 20,70 Z",
+      albert_park: "M30,30 L70,30 L80,40 L70,60 L60,60 L50,70 L40,70 L30,60 Z",
+      suzuka: "M20,60 C20,40 40,40 50,50 C60,60 80,60 80,40 C80,20 60,20 50,30 C40,40 20,40 20,60 Z",
+      miami: "M20,50 L30,40 L50,40 L60,30 L70,30 L80,40 L80,60 L70,70 L60,70 L50,80 L40,80 L30,70 L20,70 Z",
+      monaco: "M40,30 L60,30 L65,40 L60,50 L65,60 L60,70 L50,70 L45,60 L40,60 L35,50 L40,40 Z",
+      villeneuve: "M20,40 L80,40 L85,50 L80,60 L20,60 L15,50 Z",
+      silverstone: "M40,20 L60,20 L70,30 L75,50 L70,70 L60,80 L40,80 L30,70 L25,50 L30,30 Z",
+      red_bull_ring: "M30,60 L40,40 L60,40 L70,50 L60,70 L40,70 Z",
+      spa: "M30,70 L40,60 L50,60 L60,50 L70,50 L80,60 L70,80 L50,80 L30,70 Z",
+      monza: "M20,50 L80,50 L85,60 L80,70 L20,70 L15,60 Z",
+      marina_bay: "M20,30 L80,30 L80,70 L60,70 L60,60 L40,60 L40,70 L20,70 Z",
+      americas: "M20,50 L30,30 L50,30 L60,40 L70,40 L80,50 L70,70 L50,70 L40,60 L30,60 Z",
+      vegas: "M20,20 L80,20 L80,40 L60,40 L60,60 L80,60 L80,80 L20,80 Z",
+      yas_marina: "M20,40 L40,40 L40,30 L60,30 L60,40 L80,40 L80,60 L60,60 L60,70 L40,70 L40,60 L20,60 Z",
+      generic: "M20,50 Q20,20 50,20 T80,50 T50,80 T20,50"
+    };
+
+    /* ── Circuit City/Track Images ────────────────────── */
+    /* Local images bundled in images/tracks/.
+       To add a photo: save a .jpg to images/tracks/<circuitId>.jpg
+       (e.g. images/tracks/monaco.jpg). Source from government tourism
+       sites like visitmonaco.com, visitsingapore.com, etc. */
+    const TRACK_IMAGE_DIR = "images/tracks/";
+    const TRACK_IMAGE_IDS = [
+      "bahrain", "jeddah", "albert_park", "suzuka", "miami",
+      "monaco", "villeneuve", "silverstone", "red_bull_ring",
+      "spa", "monza", "marina_bay", "americas", "vegas", "yas_marina"
+    ];
+
+    /* ── DOM References ───────────────────────────────── */
+    const UI = {
+      statusPill: document.getElementById("statusPill"),
+      raceTitle: document.getElementById("raceTitle"),
+      raceLocation: document.getElementById("raceLocation"),
+      raceDate: document.getElementById("raceDate"),
+      raceTime: document.getElementById("raceTime"),
+      trackBanner: document.getElementById("trackBanner"),
+      trackBannerBg: document.getElementById("trackBannerBg"),
+      trackPath: document.getElementById("trackPath"),
+      trackName: document.getElementById("trackNameHeader"),
+      trackCountry: document.getElementById("trackCountry"),
+      countDays: document.getElementById("countDays"),
+      countHours: document.getElementById("countHours"),
+      countMinutes: document.getElementById("countMinutes"),
+      preRacePanel: document.getElementById("preRacePanel"),
+      livePanel: document.getElementById("livePanel"),
+      liveMessage: document.getElementById("liveMessage"),
+      orderList: document.getElementById("orderList"),
+      lastUpdated: document.getElementById("lastUpdated")
+    };
+
+    const mediaBackground = document.getElementById("media-background");
+    const mediaBackgroundComponent = createMediaBackgroundComponent(mediaBackground);
+
+    /* ── State ────────────────────────────────────────── */
+    let raceData = null;
+    let raceTime = null;
+    let refreshTimer = null;
+    let countdownTimer = null;
+    let liveTimer = null;
+
+    /* ── Lifecycle ────────────────────────────────────── */
+
+    function onIcueInitialized() {
+      applySettings();
+      refreshRace();
+      countdownTimer = setInterval(updateCountdown, 1000);
+      refreshTimer = setInterval(refreshRace, NEXT_REFRESH_MS);
+    }
+
+    function onIcueDataUpdated() {
+      applySettings();
+      if (raceData) {
+        updateRaceDetails(raceData);
+        updateLiveMode();
+      }
+      updateCountdown();
+    }
+
+    /* ── Settings Application ─────────────────────────── */
+
+    function applySettings() {
+      const text = typeof textColor !== "undefined" ? textColor : "#f5f5f7";
+      const accent = typeof accentColor !== "undefined" ? accentColor : "#ff1801";
+      const background = typeof backgroundColor !== "undefined" ? backgroundColor : "#0b0b12";
+      const transparencyValue = clampNumber(typeof transparency !== "undefined" ? transparency : 88, 0, 100);
+      const blurValue = clampNumber(typeof glassBlur !== "undefined" ? glassBlur : 10, 0, 30);
+
+      document.documentElement.style.setProperty("--text-color", text);
+      document.documentElement.style.setProperty("--accent-color", accent);
+      document.documentElement.style.setProperty("--background-color", background);
+      document.documentElement.style.setProperty("--panel-opacity", (transparencyValue / 100).toFixed(2));
+      document.documentElement.style.setProperty("--glass-blur", `${blurValue}px`);
+
+      /* User-set background media (supports iCUE's full media picker payload). */
+      const bgMedia = typeof backgroundImage !== "undefined" ? backgroundImage : undefined;
+      const mediaPath = resolveMediaPath(bgMedia);
+      if (typeof bgMedia === "undefined" || !mediaPath) {
+        mediaBackgroundComponent.clear();
+      } else {
+        mediaBackgroundComponent.loadMedia({
+          path: mediaPath,
+          baseSizeX: bgMedia?.baseSizeX,
+          baseSizeY: bgMedia?.baseSizeY,
+          scale: bgMedia?.scale,
+          positionX: bgMedia?.positionX,
+          positionY: bgMedia?.positionY,
+          angle: bgMedia?.angle
+        });
+      }
+
+      /* Track outline visibility */
+      const showOutline = typeof showTrackOutline !== "undefined" ? Boolean(showTrackOutline) : true;
+      UI.trackBanner.style.display = showOutline ? "flex" : "none";
+    }
+
+    /* ── Data Fetching ────────────────────────────────── */
+
+    async function refreshRace() {
+      setStatus("Loading");
+
+      try {
+        const response = await fetch(API_NEXT);
+        const data = await response.json();
+        const races = data?.MRData?.RaceTable?.Races ?? [];
+
+        if (!races.length) {
+          UI.raceTitle.textContent = "Season Complete";
+          setStatus("Offseason");
+          UI.livePanel.style.display = "none";
+          UI.preRacePanel.style.display = "block";
+          return;
+        }
+
+        raceData = races[0];
+        raceTime = buildRaceDate(raceData);
+        updateRaceDetails(raceData);
+        updateCountdown();
+        updateLiveMode();
+        setStatus("Loaded");
+      } catch (error) {
+        setStatus("Offline");
+        UI.raceTitle.textContent = "Connection Lost";
+        UI.liveMessage.textContent = "Unable to reach the F1 schedule right now.";
+      }
+    }
+
+    /* ── UI Updates ───────────────────────────────────── */
+
+    function setStatus(status) {
+      UI.statusPill.textContent = status;
+      UI.statusPill.setAttribute("data-status", status);
+    }
+
+    function updateRaceDetails(race) {
+      UI.raceTitle.textContent = race.raceName.replace("Grand Prix", "GP");
+      UI.raceLocation.textContent = `${race.Circuit.Location.locality}, ${race.Circuit.Location.country}`;
+      UI.raceDate.textContent = formatRaceDate(raceTime);
+      UI.raceTime.textContent = formatRaceTime(raceTime);
+
+      /* Track outline path */
+      const circuitId = race.Circuit.circuitId || "generic";
+      UI.trackPath.setAttribute("d", TRACK_PATHS[circuitId] || TRACK_PATHS.generic);
+      UI.trackName.textContent = race.Circuit.circuitName;
+      UI.trackCountry.textContent = `Race ${race.round}`;
+
+      /* Track banner background image — try local file, fallback to gradient */
+      if (TRACK_IMAGE_IDS.includes(circuitId)) {
+        const imageUrl = `${TRACK_IMAGE_DIR}${circuitId}.jpg`;
+        const img = new Image();
+        img.onload = () => {
+          UI.trackBannerBg.style.backgroundImage = `url(${imageUrl})`;
+          UI.trackBannerBg.classList.remove("no-image");
+        };
+        img.onerror = () => {
+          UI.trackBannerBg.style.backgroundImage = "none";
+          UI.trackBannerBg.classList.add("no-image");
+        };
+        img.src = imageUrl;
+      } else {
+        UI.trackBannerBg.style.backgroundImage = "none";
+        UI.trackBannerBg.classList.add("no-image");
+      }
+    }
+
+    function updateCountdown() {
+      if (!raceTime) return;
+
+      const now = new Date();
+      const diff = raceTime - now;
+
+      if (diff > 0) {
+        UI.preRacePanel.style.display = "block";
+        UI.livePanel.style.display = "none";
+        setStatus("Upcoming");
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+        UI.countDays.textContent = padNumber(days);
+        UI.countHours.textContent = padNumber(hours);
+        UI.countMinutes.textContent = padNumber(minutes);
+      } else {
+        updateLiveMode();
+      }
+    }
+
+    function updateLiveMode() {
+      if (!raceTime || !raceData) return;
+
+      const now = new Date();
+      const diff = now - raceTime;
+      const isLiveWindow = diff >= 0 && diff <= RACE_WINDOW_MS;
+
+      if (isLiveWindow) {
+        UI.preRacePanel.style.display = "none";
+        UI.livePanel.style.display = "block";
+        setStatus("Live");
+        UI.liveMessage.textContent = "Race in progress — updating order every minute.";
+
+        if (!liveTimer) {
+          fetchRaceOrder();
+          liveTimer = setInterval(fetchRaceOrder, LIVE_REFRESH_MS);
+        }
+      } else if (diff > RACE_WINDOW_MS) {
+        UI.preRacePanel.style.display = "none";
+        UI.livePanel.style.display = "block";
+        setStatus("Finished");
+        UI.liveMessage.textContent = "Race complete — final order.";
+        fetchRaceOrder(true);
+        stopLiveTimer();
+      } else {
+        UI.preRacePanel.style.display = "block";
+        UI.livePanel.style.display = "none";
+        setStatus("Upcoming");
+        stopLiveTimer();
+      }
+    }
+
+    function stopLiveTimer() {
+      if (liveTimer) {
+        clearInterval(liveTimer);
+        liveTimer = null;
+      }
+    }
+
+    async function fetchRaceOrder(forceUpdate) {
+      if (!raceData) return;
+
+      try {
+        const response = await fetch(API_RESULTS);
+        const data = await response.json();
+        const races = data?.MRData?.RaceTable?.Races ?? [];
+
+        if (!races.length) {
+          UI.liveMessage.textContent = "Order not available yet.";
+          UI.orderList.innerHTML = "";
+          return;
+        }
+
+        const resultRace = races[0];
+        const matchesRound = Number(resultRace.round) === Number(raceData.round);
+
+        if (!matchesRound && !forceUpdate) {
+          UI.liveMessage.textContent = "Waiting for live classification…";
+          UI.orderList.innerHTML = "";
+          return;
+        }
+
+        const results = resultRace.Results || [];
+        renderOrder(results);
+        UI.lastUpdated.textContent = `Last update ${formatLastUpdated(new Date())}`;
+      } catch (error) {
+        UI.liveMessage.textContent = "Unable to load live order.";
+      }
+    }
+
+    function renderOrder(results) {
+      UI.orderList.innerHTML = "";
+
+      if (!results.length) {
+        UI.liveMessage.textContent = "No results posted yet.";
+        return;
+      }
+
+      UI.liveMessage.textContent = "Top order (updates every minute).";
+
+      results.slice(0, MAX_LIVE_ORDER_COUNT).forEach((entry) => {
+        const li = document.createElement("li");
+        li.className = "order-item";
+        li.innerHTML = `
+          <span class="pos">${entry.position}</span>
+          <span class="driver">${entry.Driver.givenName} ${entry.Driver.familyName}</span>
+          <span class="team">${entry.Constructor.name}</span>
+        `;
+        UI.orderList.appendChild(li);
+      });
+    }
+
+    /* ── Date/Time Formatting ─────────────────────────── */
+
+    function buildRaceDate(race) {
+      if (!race?.date) return null;
+      const time = race.time || "00:00:00Z";
+      return new Date(`${race.date}T${time}`);
+    }
+
+    function formatRaceDate(date) {
+      if (!date) return "--";
+      return new Intl.DateTimeFormat(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        timeZone: getTimeZone()
+      }).format(date);
+    }
+
+    function formatRaceTime(date) {
+      if (!date) return "--";
+      const use24 = typeof use24h !== "undefined" ? use24h === "On" || use24h === true : true;
+      return new Intl.DateTimeFormat(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: !use24,
+        timeZone: getTimeZone()
+      }).format(date);
+    }
+
+    function formatLastUpdated(date) {
+      const use24 = typeof use24h !== "undefined" ? use24h === "On" || use24h === true : true;
+      return new Intl.DateTimeFormat(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: !use24
+      }).format(date);
+    }
+
+    function getTimeZone() {
+      if (typeof timeZone === "undefined") {
+        return undefined;
+      }
+      if (timeZone === "auto") {
+        return undefined;
+      }
+      return timeZone;
+    }
+
+    /* ── Utilities ────────────────────────────────────── */
+
+    function clampNumber(value, min, max) {
+      const numeric = Number(value);
+      if (Number.isNaN(numeric)) return min;
+      return Math.min(Math.max(numeric, min), max);
+    }
+
+    function padNumber(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function createMediaBackgroundComponent(container) {
+      if (typeof MediaEditor === "function") {
+        return new MediaEditor({
+          container,
+          onMediaLoaded: (mediaElement) => {
+            console.log("Media loaded:", mediaElement.tagName);
+            container.classList.add("has-media");
+          },
+          onMediaError: (error) => {
+            console.error("Media error:", error);
+          }
+        });
+      }
+
+      console.warn("MediaEditor is unavailable; falling back to static image rendering.");
+      return {
+        clear() {
+          container.style.backgroundImage = "none";
+          container.classList.remove("has-media");
+        },
+        loadMedia(config) {
+          const assetPath = resolveMediaPath(config?.pathToAsset || config?.path);
+          container.style.backgroundImage = assetPath ? `url(${assetPath})` : "none";
+          if (assetPath) {
+            container.classList.add("has-media");
+          } else {
+            container.classList.remove("has-media");
+          }
+          container.style.backgroundSize = "cover";
+          container.style.backgroundPosition = "center";
+          container.style.backgroundRepeat = "no-repeat";
+        }
+      };
+    }
+
+    function resolveMediaPath(media) {
+      if (!media) return "";
+      if (typeof media === "string") return media;
+      if (typeof media.pathToAsset === "string") return media.pathToAsset;
+      if (typeof media.path === "string") return media.path;
+      return "";
+    }
+
+    /* ── Bootstrap ─────────────────────────────────────── */
+    /* iCUE sets iCUE_initialized before the widget loads.
+       If it's already true, run init immediately.
+       Otherwise iCUE will call icueEvents.onICUEInitialized() later.
+       Outside iCUE (browser preview), just init right away. */
+    if (typeof iCUE_initialized !== "undefined" && iCUE_initialized) {
+      onIcueInitialized();
+    } else if (typeof iCUE_initialized === "undefined") {
+      onIcueInitialized();
+    }
+  </script>
+</body>
+</html>

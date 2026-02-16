@@ -1,0 +1,215 @@
+/* Qt/iCUE friendly, responsive S/M/L */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root{
+  --text-color: #ffffff;
+  --accent-color: #ffffff;
+  --bg-color: #000000;
+  --widget-opacity: 0.8;
+
+  --bg-brightness: 1;     /* set by JS */
+  --glass-blur: 10;       /* px, set by JS */
+}
+
+body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: var(--text-color);
+}
+
+/* Background layer (color + optional image) */
+.bg-layer{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background-color: var(--bg-color);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: var(--widget-opacity);
+  /* Commute-style blur: apply blur + brightness directly to the background. */
+  filter: blur(calc(var(--glass-blur) * 1px)) brightness(var(--bg-brightness));
+  transform: scale(1.05);
+  will-change: filter;
+}
+
+/* Card container */
+.widget-card{
+  position: relative;
+  z-index: 2;
+
+  width: fit-content;
+  min-width: clamp(260px, 70vw, 760px);
+  min-height: clamp(240px, 50vh, 680px);
+  max-width: 92vw;
+  max-height: 92vh;
+  padding: clamp(16px, 3vh, 28px);
+  border-radius: clamp(16px, 3vh, 28px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2vh, 18px);
+
+  /* Glass: flat, modern panel that sits over the background. */
+  background: rgba(18, 20, 26, calc(0.35 * var(--widget-opacity)));
+  border: 1px solid rgba(255,255,255, calc(0.18 * var(--widget-opacity)));
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.32);
+}
+
+/* Time */
+.time-container{
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 0;
+  text-shadow: none;
+}
+
+.time-digits{
+  font-weight: 200;
+  line-height: 1;
+  font-size: clamp(6.5vh, 8.5vw, 14.5vh);
+  letter-spacing: -0.04em;
+}
+
+.ampm{
+  font-size: clamp(2.2vh, 3vw, 4.2vh);
+  font-weight: 500;
+  opacity: 0;
+  max-width: 0;
+  margin-left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition:
+    opacity 0.25s ease,
+    max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ampm.visible{
+  opacity: 0.75;
+  max-width: 12vh;
+  margin-left: 1.2vh;
+}
+
+/* Date */
+.date{
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  opacity: 0.55;
+  font-size: clamp(2.2vh, 3vw, 4.2vh);
+  margin-bottom: 0;
+  text-align: center;
+}
+
+/* Moon */
+.moon-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.2vh, 2.2vw, 3vh);
+}
+
+.moon-svg{
+  width: min(24vh, 28vw);
+  height: min(24vh, 28vw);
+  filter: none;
+}
+
+.moon-base{
+  /* Flat base for a modern look. */
+  fill: var(--accent-color);
+  opacity: 0.16;
+}
+
+.moon-outline{
+  stroke: var(--text-color);
+  opacity: 0.14;
+  stroke-width: 1.2;
+  fill: transparent;
+}
+
+.moon-fill{
+  /* Subtle highlight so the phase stays readable without heavy gradients. */
+  fill: var(--accent-color);
+  opacity: 0.78;
+  transition: d 0.5s ease, opacity 0.35s ease;
+}
+
+.moon-craters circle{
+  /* Keep crater detail minimal and flat. */
+  fill: rgba(0, 0, 0, 0.12);
+  mix-blend-mode: normal;
+  opacity: 0.25;
+}
+
+.moon-label{
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: clamp(2.6vh, 3.2vw, 4.5vh);
+  text-align: center;
+}
+
+.illumination{
+  font-weight: 500;
+  opacity: 0.55;
+  font-size: clamp(2vh, 2.6vw, 3.4vh);
+  text-align: center;
+}
+
+/* Status */
+.status{
+  position: absolute;
+  bottom: min(2.2vh, 2vw);
+  font-size: clamp(1.6vh, 2.2vw, 3vh);
+  opacity: 0.6;
+  display: none;
+}
+.status.visible{ display: block; }
+
+/* --- Layout tiers for S/M/L --- */
+
+/* Small-ish / more square */
+@media (max-aspect-ratio: 4/3) {
+  .widget-card{
+    /* Squeeze the frost tile in small view for balanced margins. */
+    min-width: clamp(220px, 62vw, 680px);
+    min-height: clamp(200px, 46vh, 600px);
+    max-width: 94vw;
+    max-height: 94vh;
+  }
+}
+
+/* Medium (balanced) */
+@media (min-aspect-ratio: 4/3) and (max-aspect-ratio: 16/9) {
+  .widget-card{
+    min-height: clamp(260px, 54vh, 720px);
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+}
+
+/* Large / very wide */
+@media (min-aspect-ratio: 16/9) {
+  .moon-container{
+    gap: clamp(1.8vh, 2.4vw, 3.4vh);
+  }
+}

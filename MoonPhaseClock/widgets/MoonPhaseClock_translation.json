@@ -1,0 +1,248 @@
+{
+  "en": {
+    "translation": {
+      "MoonPhase Clock": "MoonPhase Clock",
+      "Clock Settings": "Clock Settings",
+      "24-Hour Mode": "24-Hour Mode",
+      "Show AM PM": "Show AM/PM",
+      "Background Image": "Background Image",
+      "Background Brightness": "Background Brightness",
+      "Glass Blur": "Glass Blur",
+      "Widget Personalization": "Widget Personalization",
+      "Text Color": "Text Color",
+      "Accent Color": "Accent Color",
+      "Background": "Background",
+      "Widget Transparency": "Widget Transparency",
+      "On": "On",
+      "Off": "Off"
+    }
+  },
+
+  "de": {
+    "translation": {
+      "MoonPhase Clock": "Mondphasen-Uhr",
+      "Clock Settings": "Uhreinstellungen",
+      "24-Hour Mode": "24-Stunden-Modus",
+      "Show AM PM": "AM/PM anzeigen",
+      "Background Image": "Hintergrundbild",
+      "Background Brightness": "Hintergrundhelligkeit",
+      "Glass Blur": "Glasunschärfe",
+      "Widget Personalization": "Widget-Personalisierung",
+      "Text Color": "Textfarbe",
+      "Accent Color": "Akzentfarbe",
+      "Background": "Hintergrund",
+      "Widget Transparency": "Widget-Transparenz",
+      "On": "Ein",
+      "Off": "Aus"
+    }
+  },
+
+  "fr": {
+    "translation": {
+      "MoonPhase Clock": "Horloge des phases lunaires",
+      "Clock Settings": "Paramètres de l’horloge",
+      "24-Hour Mode": "Mode 24 heures",
+      "Show AM PM": "Afficher AM/PM",
+      "Background Image": "Image d’arrière-plan",
+      "Background Brightness": "Luminosité de l’arrière-plan",
+      "Glass Blur": "Flou du verre",
+      "Widget Personalization": "Personnalisation du widget",
+      "Text Color": "Couleur du texte",
+      "Accent Color": "Couleur d’accentuation",
+      "Background": "Arrière-plan",
+      "Widget Transparency": "Transparence du widget",
+      "On": "Activé",
+      "Off": "Désactivé"
+    }
+  },
+
+  "es": {
+    "translation": {
+      "MoonPhase Clock": "Reloj de fases lunares",
+      "Clock Settings": "Ajustes del reloj",
+      "24-Hour Mode": "Modo de 24 horas",
+      "Show AM PM": "Mostrar AM/PM",
+      "Background Image": "Imagen de fondo",
+      "Background Brightness": "Brillo del fondo",
+      "Glass Blur": "Desenfoque de cristal",
+      "Widget Personalization": "Personalización del widget",
+      "Text Color": "Color del texto",
+      "Accent Color": "Color de acento",
+      "Background": "Fondo",
+      "Widget Transparency": "Transparencia del widget",
+      "On": "Activado",
+      "Off": "Desactivado"
+    }
+  },
+
+  "it": {
+    "translation": {
+      "MoonPhase Clock": "Orologio fasi lunari",
+      "Clock Settings": "Impostazioni orologio",
+      "24-Hour Mode": "Modalità 24 ore",
+      "Show AM PM": "Mostra AM/PM",
+      "Background Image": "Immagine di sfondo",
+      "Background Brightness": "Luminosità dello sfondo",
+      "Glass Blur": "Sfocatura vetro",
+      "Widget Personalization": "Personalizzazione widget",
+      "Text Color": "Colore testo",
+      "Accent Color": "Colore accento",
+      "Background": "Sfondo",
+      "Widget Transparency": "Trasparenza widget",
+      "On": "Attivo",
+      "Off": "Disattivo"
+    }
+  },
+
+  "pt": {
+    "translation": {
+      "MoonPhase Clock": "Relógio de fases da lua",
+      "Clock Settings": "Configurações do relógio",
+      "24-Hour Mode": "Modo 24 horas",
+      "Show AM PM": "Mostrar AM/PM",
+      "Background Image": "Imagem de fundo",
+      "Background Brightness": "Brilho do fundo",
+      "Glass Blur": "Desfoque de vidro",
+      "Widget Personalization": "Personalização do widget",
+      "Text Color": "Cor do texto",
+      "Accent Color": "Cor de destaque",
+      "Background": "Plano de fundo",
+      "Widget Transparency": "Transparência do widget",
+      "On": "Ligado",
+      "Off": "Desligado"
+    }
+  },
+
+  "ru": {
+    "translation": {
+      "MoonPhase Clock": "Часы фаз Луны",
+      "Clock Settings": "Настройки часов",
+      "24-Hour Mode": "24-часовой режим",
+      "Show AM PM": "Показывать AM/PM",
+      "Background Image": "Фоновое изображение",
+      "Background Brightness": "Яркость фона",
+      "Glass Blur": "Размытие стекла",
+      "Widget Personalization": "Персонализация виджета",
+      "Text Color": "Цвет текста",
+      "Accent Color": "Акцентный цвет",
+      "Background": "Фон",
+      "Widget Transparency": "Прозрачность виджета",
+      "On": "Вкл",
+      "Off": "Выкл"
+    }
+  },
+
+  "ja": {
+    "translation": {
+      "MoonPhase Clock": "月相時計",
+      "Clock Settings": "時計設定",
+      "24-Hour Mode": "24時間表示",
+      "Show AM PM": "AM/PM を表示",
+      "Background Image": "背景画像",
+      "Background Brightness": "背景の明るさ",
+      "Glass Blur": "ガラスぼかし",
+      "Widget Personalization": "ウィジェットのカスタマイズ",
+      "Text Color": "テキスト色",
+      "Accent Color": "アクセントカラー",
+      "Background": "背景",
+      "Widget Transparency": "ウィジェットの透明度",
+      "On": "オン",
+      "Off": "オフ"
+    }
+  },
+
+  "ko": {
+    "translation": {
+      "MoonPhase Clock": "달 위상 시계",
+      "Clock Settings": "시계 설정",
+      "24-Hour Mode": "24시간 모드",
+      "Show AM PM": "AM/PM 표시",
+      "Background Image": "배경 이미지",
+      "Background Brightness": "배경 밝기",
+      "Glass Blur": "유리 블러",
+      "Widget Personalization": "위젯 개인화",
+      "Text Color": "텍스트 색상",
+      "Accent Color": "강조 색상",
+      "Background": "배경",
+      "Widget Transparency": "위젯 투명도",
+      "On": "켜짐",
+      "Off": "꺼짐"
+    }
+  },
+
+  "zh_CN": {
+    "translation": {
+      "MoonPhase Clock": "月相时钟",
+      "Clock Settings": "时钟设置",
+      "24-Hour Mode": "24 小时制",
+      "Show AM PM": "显示 AM/PM",
+      "Background Image": "背景图片",
+      "Background Brightness": "背景亮度",
+      "Glass Blur": "玻璃模糊",
+      "Widget Personalization": "小组件个性化",
+      "Text Color": "文字颜色",
+      "Accent Color": "强调色",
+      "Background": "背景",
+      "Widget Transparency": "小组件透明度",
+      "On": "开",
+      "Off": "关"
+    }
+  },
+
+  "zh_TW": {
+    "translation": {
+      "MoonPhase Clock": "月相時鐘",
+      "Clock Settings": "時鐘設定",
+      "24-Hour Mode": "24 小時制",
+      "Show AM PM": "顯示 AM/PM",
+      "Background Image": "背景圖片",
+      "Background Brightness": "背景亮度",
+      "Glass Blur": "玻璃模糊",
+      "Widget Personalization": "小工具個人化",
+      "Text Color": "文字顏色",
+      "Accent Color": "重點色彩",
+      "Background": "背景",
+      "Widget Transparency": "小工具透明度",
+      "On": "開",
+      "Off": "關"
+    }
+  },
+
+  "uk": {
+    "translation": {
+      "MoonPhase Clock": "Годинник фаз Місяця",
+      "Clock Settings": "Налаштування годинника",
+      "24-Hour Mode": "24-годинний режим",
+      "Show AM PM": "Показувати AM/PM",
+      "Background Image": "Фонове зображення",
+      "Background Brightness": "Яскравість фону",
+      "Glass Blur": "Розмиття скла",
+      "Widget Personalization": "Персоналізація віджета",
+      "Text Color": "Колір тексту",
+      "Accent Color": "Акцентний колір",
+      "Background": "Фон",
+      "Widget Transparency": "Прозорість віджета",
+      "On": "Увімкнено",
+      "Off": "Вимкнено"
+    }
+  },
+
+  "en_FAKE": {
+    "translation": {
+      "MoonPhase Clock": "MOONPHASE CLOCK OF COSMIC CERTAINTY",
+      "Clock Settings": "ABSOLUTE CLOCK SETTINGS ZONE",
+      "24-Hour Mode": "24-HOUR TIME OF PRECISION",
+      "Show AM PM": "DISPLAY AM/PM OF TRADITION",
+      "Background Image": "BACKGROUND IMAGE OF VIBES",
+      "Background Brightness": "BACKGROUND BRIGHTNESS AMPLIFIER",
+      "Glass Blur": "GLASS BLUR INTENSITY FIELD",
+      "Widget Personalization": "ULTIMATE WIDGET PERSONALIZATION",
+      "Text Color": "TEXT CHROMATIC ESSENCE",
+      "Accent Color": "ACCENT COLOR OF IMPORTANCE",
+      "Background": "BACKGROUND OF NIGHT",
+      "Widget Transparency": "WIDGET TRANSPARENCY FORCE",
+      "On": "ENGAGED",
+      "Off": "DISENGAGED"
+    }
+  }
+}

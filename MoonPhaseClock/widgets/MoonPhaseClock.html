@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>tr('MoonPhase Clock')</title>
+  <link rel="icon" type="image/svg+xml" href="images/MoonPhaseClock.svg">
+  <link rel="stylesheet" type="text/css" href="tools/media_editor/MediaEditor.css">
+  <script type="text/javascript" src="tools/media_editor/MediaEditor.js"></script>
+
+  <!-- Xeneon Edge -->
+  <meta name="x-icue-restrictions"
+      data-restrictions='[
+        { "device": "dashboard_lcd" }
+      ]'>
+
+  <!-- Widget settings -->
+  <meta name="x-icue-property" content="use24h" data-label="tr('24-Hour Mode')" data-type="combobox" data-values="['On','Off']" data-default="'On'">
+  <meta name="x-icue-property" content="showAmPm" data-label="tr('Show AM PM')" data-type="combobox" data-values="['On','Off']" data-default="'Off'">
+
+  <meta name="x-icue-property" content="backgroundImage" data-label="tr('Background Image')" data-type="media-selector"
+        data-filters="['*.png','*.jpg','*.jpeg','*.webp']">
+
+  <meta name="x-icue-property" content="bgBrightness" data-label="tr('Background Brightness')" data-type="slider"
+        data-default="100" data-min="0" data-max="200" data-step="1">
+
+  <meta name="x-icue-property" content="glassBlur" data-label="tr('Glass Blur')" data-type="slider"
+        data-default="10" data-min="0" data-max="40" data-step="1">
+
+  <!-- REQUIRED personalization group (MUST be last, MUST be only these 4) -->
+  <meta name="x-icue-property" content="textColor" data-label="tr('Text Color')" data-type="color" data-default="'#ffffff'">
+  <meta name="x-icue-property" content="accentColor" data-label="tr('Accent Color')" data-type="color" data-default="'#ffffff'">
+  <meta name="x-icue-property" content="backgroundColor" data-label="tr('Background')" data-type="color" data-default="'#000000'">
+  <meta name="x-icue-property" content="transparency" data-label="tr('Widget Transparency')" data-type="slider"
+        data-default="80" data-min="0" data-max="100" data-step="1">
+
+  <script id="x-icue-groups" type="application/json">
+    [
+      {
+        "title": "tr('Clock Settings')",
+        "properties": [
+          "use24h",
+          "showAmPm"
+        ]
+      },
+      {
+        "title": "tr('Widget Personalization')",
+        "properties": [
+          "backgroundImage",
+          "bgBrightness",
+          "glassBlur",
+          "textColor",
+          "accentColor",
+          "backgroundColor",
+          "transparency"
+        ]
+      }
+    ]
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="styles/MoonPhaseClock.css">
+</head>
+
+<body>
+  <div class="bg-layer" id="bgLayer" aria-hidden="true"></div>
+
+  <div class="widget-card" id="widgetCard">
+    <div class="time-container">
+      <div class="time-digits" id="clock">00:00</div>
+      <div class="ampm" id="ampmDisplay">AM</div>
+    </div>
+
+    <div class="date" id="date">LOADING...</div>
+
+    <div class="moon-container">
+      <svg class="moon-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Moon phase visual">
+        <!-- SVG gradients + crater layer for depth -->
+        <defs>
+          <radialGradient id="moon-surface" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="var(--accent-color)" stop-opacity="0.95"/>
+            <stop offset="55%" stop-color="var(--accent-color)" stop-opacity="0.82"/>
+            <stop offset="100%" stop-color="var(--accent-color)" stop-opacity="0.55"/>
+          </radialGradient>
+          <radialGradient id="moon-shadow" cx="40%" cy="40%" r="80%">
+            <stop offset="0%" stop-color="rgb(255,255,255)" stop-opacity="0.18"/>
+            <stop offset="60%" stop-color="rgb(0,0,0)" stop-opacity="0.65"/>
+            <stop offset="100%" stop-color="rgb(0,0,0)" stop-opacity="0.9"/>
+          </radialGradient>
+          <clipPath id="moon-clip">
+            <circle cx="32" cy="32" r="30"/>
+          </clipPath>
+        </defs>
+
+        <circle class="moon-base" cx="32" cy="32" r="30"/>
+        <path class="moon-fill" id="moon-path" d="" clip-path="url(#moon-clip)"/>
+        <g class="moon-craters" clip-path="url(#moon-clip)" aria-hidden="true">
+          <circle cx="22" cy="22" r="3.6"/>
+          <circle cx="40" cy="20" r="2.4"/>
+          <circle cx="44" cy="36" r="3"/>
+          <circle cx="26" cy="40" r="2"/>
+          <circle cx="18" cy="34" r="1.6"/>
+        </g>
+        <circle class="moon-outline" cx="32" cy="32" r="30"/>
+      </svg>
+
+      <div class="moon-label" id="moon-phase">--</div>
+      <div class="illumination" id="moon-illum">--% Illumination</div>
+    </div>
+
+    <div class="status" id="status" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    // iCUE event bridge
+    icueEvents = {
+      onDataUpdated: onIcueDataUpdated,
+      onICUEInitialized: onIcueInitialized
+    };
+
+    const bgLayer = document.getElementById('bgLayer');
+    const widgetCard = document.getElementById('widgetCard');
+    const ampmDisplay = document.getElementById('ampmDisplay');
+    const statusEl = document.getElementById('status');
+    const mediaBackgroundComponent = createMediaBackgroundComponent(bgLayer);
+
+    // ---- Persistence (per-widget) ----
+    const STORAGE_KEY = (typeof uniqueId !== 'undefined' && uniqueId) ? uniqueId : 'MoonPhaseClockFallback';
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveState(partial) {
+      const current = loadState();
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.assign({}, current, partial)));
+      } catch (e) {
+        // Ignore quota / serialization issues
+      }
+    }
+
+    // ---- Responsive state (driven by iCUE meta) ----
+    let is24Hour = true;
+    let showAmPmLocal = false;
+
+    // ---- Clock ----
+    function updateClock() {
+      const now = new Date();
+
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      const ampmText = (hours >= 12) ? 'PM' : 'AM';
+
+      // AM/PM visibility
+      if (showAmPmLocal) {
+        ampmDisplay.textContent = ampmText;
+        ampmDisplay.classList.add('visible');
+      } else {
+        ampmDisplay.classList.remove('visible');
+      }
+
+      // Hour formatting
+      let hStr;
+      if (is24Hour) {
+        hStr = String(hours).padStart(2, '0');
+      } else {
+        let h = hours % 12;
+        h = h ? h : 12;
+        hStr = String(h).padStart(2, '0');
+      }
+
+      const mStr = String(minutes).padStart(2, '0');
+
+      document.getElementById('clock').textContent = `${hStr}:${mStr}`;
+      document.getElementById('date').textContent = now.toLocaleDateString('en-US', {
+        weekday: 'long', month: 'short', day: 'numeric'
+      });
+    }
+
+    // ---- Moon phase ----
+    const moonPaths = {
+      new: "",
+      waxCre: "M32,2 A30,30 0 0,1 32,62 A20,30 0 0,0 32,2",
+      firstQ: "M32,2 A30,30 0 0,1 32,62 L32,2Z",
+      waxGib: "M32,2 A30,30 0 0,1 32,62 A40,30 0 0,1 32,2",
+      full: "M32,2 A30,30 0 1,1 32,62 A30,30 0 1,1 32,2",
+      wanGib: "M32,2 A40,30 0 0,0 32,62 A30,30 0 0,1 32,2",
+      lastQ: "M32,2 A30,30 0 0,0 32,62 L32,2Z",
+      wanCre: "M32,2 A20,30 0 0,1 32,62 A30,30 0 0,0 32,2"
+    };
+
+    function getMoonPhase(date) {
+      const synodicMonth = 29.53058867;
+      const refDate = new Date('2000-01-06T18:14:00');
+      const diffTime = date.getTime() - refDate.getTime();
+      const diffDays = diffTime / (1000 * 60 * 60 * 24);
+      let phase = (diffDays % synodicMonth) / synodicMonth;
+      if (phase < 0) phase += 1;
+
+      let phaseName = "", pathData = "";
+
+      if (phase < 0.025 || phase > 0.975) { phaseName = "New Moon"; pathData = moonPaths.new; }
+      else if (phase < 0.225) { phaseName = "Waxing Crescent"; pathData = moonPaths.waxCre; }
+      else if (phase < 0.275) { phaseName = "First Quarter"; pathData = moonPaths.firstQ; }
+      else if (phase < 0.475) { phaseName = "Waxing Gibbous"; pathData = moonPaths.waxGib; }
+      else if (phase < 0.525) { phaseName = "Full Moon"; pathData = moonPaths.full; }
+      else if (phase < 0.725) { phaseName = "Waning Gibbous"; pathData = moonPaths.wanGib; }
+      else if (phase < 0.775) { phaseName = "Last Quarter"; pathData = moonPaths.lastQ; }
+      else { phaseName = "Waning Crescent"; pathData = moonPaths.wanCre; }
+
+      let illumination = Math.abs(phase - 0.5) * 2;
+      illumination = (1 - illumination) * 100;
+
+      return { name: phaseName, path: pathData, illum: Math.round(illumination) };
+    }
+
+    function updateMoon() {
+      const now = new Date();
+      const phaseData = getMoonPhase(now);
+
+      const p = document.getElementById('moon-path');
+      if (!phaseData.path) {
+        p.setAttribute('d', '');
+        p.style.opacity = '0';
+      } else {
+        p.setAttribute('d', phaseData.path);
+        p.style.opacity = '1';
+      }
+
+      document.getElementById('moon-phase').textContent = phaseData.name;
+      document.getElementById('moon-illum').textContent = phaseData.illum + "% Illumination";
+    }
+
+    // ---- Styling + iCUE meta application ----
+    function setStatus(text) {
+      if (!text) {
+        statusEl.classList.remove('visible');
+        statusEl.textContent = '';
+        statusEl.setAttribute('aria-hidden', 'true');
+        return;
+      }
+      statusEl.textContent = text;
+      statusEl.classList.add('visible');
+      statusEl.setAttribute('aria-hidden', 'false');
+    }
+
+    // Normalizes iCUE media-selector values from either string paths or media objects.
+    function resolveMediaPath(value) {
+      if (!value) return '';
+      if (typeof value === 'string') return value;
+      if (value.pathToAsset) return value.pathToAsset;
+      if (value.path) return value.path;
+      if (value.value) return value.value;
+      return '';
+    }
+
+    // Preserve full MediaEditor transform payload so iCUE crop/position/scale/angle remain accurate.
+    function normalizeMediaConfig(rawMedia) {
+      const mediaPath = resolveMediaPath(rawMedia);
+      if (!mediaPath) return null;
+
+      const base = (rawMedia && typeof rawMedia === 'object') ? rawMedia : {};
+      return {
+        pathToAsset: base.pathToAsset || mediaPath,
+        path: base.path || mediaPath,
+        baseSizeX: Number(base.baseSizeX) || 0,
+        baseSizeY: Number(base.baseSizeY) || 0,
+        scale: Number.isFinite(Number(base.scale)) ? Number(base.scale) : 1,
+        positionX: Number(base.positionX) || 0,
+        positionY: Number(base.positionY) || 0,
+        angle: Number(base.angle) || 0
+      };
+    }
+
+    // Wrap MediaEditor with a safe fallback so the widget still renders if helper files are unavailable.
+    function createMediaBackgroundComponent(container) {
+      if (!container) {
+        return { clear: function() {}, loadMedia: function() {} };
+      }
+
+      if (typeof MediaEditor === 'function') {
+        return new MediaEditor({
+          container: container,
+          onMediaLoaded: function() {
+            container.style.display = 'block';
+          },
+          onMediaError: function(error) {
+            console.error('MoonPhaseClock media background error:', error);
+          }
+        });
+      }
+
+      console.warn('MediaEditor unavailable in MoonPhaseClock; using CSS fallback background image.');
+      return {
+        clear: function() {
+          container.style.backgroundImage = 'none';
+          container.style.display = 'none';
+        },
+        loadMedia: function(config) {
+          const mediaPath = resolveMediaPath(config);
+          if (!mediaPath) {
+            container.style.backgroundImage = 'none';
+            container.style.display = 'none';
+            return;
+          }
+          container.style.backgroundImage = "url('" + mediaPath + "')";
+          container.style.backgroundRepeat = 'no-repeat';
+          container.style.backgroundPosition = 'center';
+          container.style.backgroundSize = 'cover';
+          container.style.display = 'block';
+        }
+      };
+    }
+
+    function applyStylesFromMeta() {
+      const saved = loadState();
+
+      // Coerce / fallback
+      const t = Number(typeof transparency !== 'undefined' ? transparency : saved.transparency);
+      const widgetOpacity = Number.isFinite(t) ? (Math.max(0, Math.min(100, t)) / 100) : 0.8;
+
+      const tc = (typeof textColor !== 'undefined' && textColor) ? textColor : (saved.textColor || '#ffffff');
+      const ac = (typeof accentColor !== 'undefined' && accentColor) ? accentColor : (saved.accentColor || '#ffffff');
+      const bc = (typeof backgroundColor !== 'undefined' && backgroundColor) ? backgroundColor : (saved.backgroundColor || '#000000');
+
+      // Sliders
+      const br = Number(typeof bgBrightness !== 'undefined' ? bgBrightness : saved.bgBrightness);
+      const brightnessPct = Number.isFinite(br) ? Math.max(0, Math.min(200, br)) : 100;
+
+      const gb = Number(typeof glassBlur !== 'undefined' ? glassBlur : saved.glassBlur);
+      const blurPx = Number.isFinite(gb) ? Math.max(0, Math.min(40, gb)) : 10;
+
+      document.documentElement.style.setProperty('--text-color', tc);
+      document.documentElement.style.setProperty('--accent-color', ac);
+      document.documentElement.style.setProperty('--bg-color', bc);
+      document.documentElement.style.setProperty('--widget-opacity', String(widgetOpacity));
+      document.documentElement.style.setProperty('--bg-brightness', String(brightnessPct / 100));
+      document.documentElement.style.setProperty('--glass-blur', String(blurPx));
+
+      // Blur is handled by the background layer (Commute-style).
+      widgetCard.style.backdropFilter = 'none';
+      widgetCard.style.webkitBackdropFilter = 'none';
+
+      // Background image (media-selector may return a string path or a full media object).
+      let mediaConfig = null;
+      if (typeof backgroundImage !== 'undefined') {
+        mediaConfig = normalizeMediaConfig(backgroundImage);
+      }
+
+      // Fall back to persisted string path when live iCUE data has not arrived yet.
+      if (!mediaConfig && saved.backgroundImage) {
+        mediaConfig = normalizeMediaConfig(saved.backgroundImage);
+      }
+
+      if (!mediaConfig) {
+        mediaBackgroundComponent.clear();
+      } else {
+        mediaBackgroundComponent.loadMedia(mediaConfig);
+      }
+
+// Persist what we can (useful if iCUE resets defaults or widget duplicated)
+      saveState({
+        transparency: Math.round(widgetOpacity * 100),
+        textColor: tc,
+        accentColor: ac,
+        backgroundColor: bc,
+        bgBrightness: brightnessPct,
+        glassBlur: blurPx,
+        backgroundImage: mediaConfig ? mediaConfig.pathToAsset : ''
+      });
+    }
+
+
+    function toBool(v, fallback) {
+      if (typeof v === 'boolean') return v;
+      if (typeof v === 'string') {
+        const s = v.trim().toLowerCase();
+        if (s === 'on' || s === 'true' || s === '1' || s === 'yes') return true;
+        if (s === 'off' || s === 'false' || s === '0' || s === 'no') return false;
+      }
+      return fallback;
+    }
+
+    function applyClockFromMeta() {
+      const saved = loadState();
+
+      const u24 = (typeof use24h !== 'undefined') ? toBool(use24h, true) : (typeof saved.use24h === 'boolean' ? saved.use24h : true);
+      const sAp = (typeof showAmPm !== 'undefined') ? toBool(showAmPm, false) : (typeof saved.showAmPm === 'boolean' ? saved.showAmPm : false);
+
+      is24Hour = u24;
+      showAmPmLocal = sAp;
+
+      saveState({ use24h: u24, showAmPm: sAp });
+    }
+
+    function onIcueDataUpdated() {
+      try {
+        applyStylesFromMeta();
+        applyClockFromMeta();
+        updateClock();
+        setStatus('');
+      } catch (e) {
+        setStatus('ERROR');
+      }
+    }
+
+    function onIcueInitialized() {
+      // Ensure everything applies on first render
+      onIcueDataUpdated();
+    }
+
+    // ---- Initialization / timers ----
+    function initTimers() {
+      updateClock();
+      updateMoon();
+
+      const now = new Date();
+      const secondsUntilNextMinute = 60 - now.getSeconds();
+      setTimeout(() => {
+        updateClock();
+        setInterval(updateClock, 60000);
+      }, secondsUntilNextMinute * 1000);
+
+      setInterval(updateMoon, 1000 * 60 * 60);
+    }
+
+    // Start
+    initTimers();
+
+    if (typeof iCUE_initialized !== 'undefined' && iCUE_initialized) {
+      onIcueInitialized();
+    } else {
+      // still apply saved state so it doesn't flash defaults
+      onIcueDataUpdated();
+    }
+  </script>
+</body>
+</html>

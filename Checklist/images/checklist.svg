@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Checklist paper outline -->
+  <rect x="15" y="10" width="70" height="80" rx="4" stroke="currentColor" stroke-width="3" fill="none"/>
+
+  <!-- Checkbox 1 (checked) -->
+  <rect x="22" y="22" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+  <path d="M 24 28 L 27 31 L 32 25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <line x1="38" y1="28" x2="70" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Checkbox 2 (unchecked) -->
+  <rect x="22" y="40" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+  <line x1="38" y1="46" x2="70" y2="46" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Checkbox 3 (checked) -->
+  <rect x="22" y="58" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+  <path d="M 24 64 L 27 67 L 32 61" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <line x1="38" y1="64" x2="70" y2="64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Checkbox 4 (unchecked) -->
+  <rect x="22" y="76" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+  <line x1="38" y1="82" x2="55" y2="82" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</svg>

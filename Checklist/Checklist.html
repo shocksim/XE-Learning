@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tr('Checklist')</title>
+  <link rel="icon" type="image/svg+xml" href="images/checklist.svg">
+  <link rel="stylesheet" type="text/css" href="tools/media_editor/MediaEditor.css">
+  <script type="text/javascript" src="tools/media_editor/MediaEditor.js"></script>
+
+  <!-- Device restrictions -->
+  <meta name="x-icue-restrictions"
+        data-restrictions='[
+          { "device": "dashboard_lcd" }
+        ]'>
+
+  <!-- Enable interactivity for drag-and-drop and button clicks -->
+  <meta name="x-icue-interactive">
+
+  <!-- Widget grouping -->
+  <meta name="x-icue-widget-group" content="tr('Productivity')">
+
+  <!-- Checklist options -->
+  <meta name="x-icue-property" content="showDeleteButtons" data-label="tr('Show Delete Buttons')" data-type="switch" data-default="true">
+
+  <!-- Widget Personalization (MUST BE LAST GROUP) -->
+  <meta name="x-icue-property" content="backgroundImage" data-label="tr('Background Image')" data-type="media-selector" data-filters="['*.png','*.jpg','*.jpeg','*.webp']">
+  <meta name="x-icue-property" content="glassBlur" data-label="tr('Glass Blur')" data-type="slider" data-default="0" data-min="0" data-max="40" data-step="1">
+  <meta name="x-icue-property" content="bgBrightness" data-label="tr('Background Brightness')" data-type="slider" data-default="100" data-min="10" data-max="150" data-step="5">
+  <meta name="x-icue-property" content="textColor" data-label="tr('Text Color')" data-type="color" data-default="'#ffffff'">
+  <meta name="x-icue-property" content="accentColor" data-label="tr('Accent Color')" data-type="color" data-default="'#00d4ff'">
+  <meta name="x-icue-property" content="backgroundColor" data-label="tr('Background')" data-type="color" data-default="'#000000'">
+  <meta name="x-icue-property" content="transparency" data-label="tr('Transparency')" data-type="slider" data-default="100" data-min="0" data-max="100" data-step="1">
+
+  <!-- Property grouping - Widget Personalization MUST be last -->
+  <script id="x-icue-groups" type="application/json">
+  [
+    { "title": "tr('Checklist Options')", "properties": ["showDeleteButtons"] },
+    { "title": "tr('Widget Personalization')", "properties": ["backgroundImage", "glassBlur", "bgBrightness", "textColor", "accentColor", "backgroundColor", "transparency"] }
+  ]
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="styles/Checklist.css">
+</head>
+<body>
+  <div class="widget-root tall-stack">
+    <div class="widget-background" aria-hidden="true">
+      <div id="media-background"></div>
+    </div>
+
+    <div class="content">
+      <!-- Single toolbar row: input | add | clear checked | clipboard -->
+      <div class="toolbar">
+        <input type="text" id="newItemInput" class="toolbar-input" placeholder="Add New Item" maxlength="100">
+        <button id="addItemBtn" class="toolbar-btn toolbar-btn-accent" title="Add New Item">+</button>
+        <button id="deleteCheckedBtn" class="toolbar-btn" title="Remove Completed Items">&#x2713;</button>
+        <button id="copyUncheckedBtn" class="toolbar-btn" title="Copy Open Items">&#x1F4CB;</button>
+      </div>
+
+      <!-- Checklist items container -->
+      <div id="checklistContainer" class="checklist-container">
+        <div class="empty-state label-text">No Items Listed</div>
+      </div>
+    </div>
+
+    <!-- Toast notification for clipboard feedback -->
+    <div id="toastNotification" class="toast-notification"></div>
+  </div>
+
+  <script>
+    // iCUE API binding
+    icueEvents = {
+      'onDataUpdated': onIcueDataUpdated,
+      'onICUEInitialized': onIcueInitialized
+    };
+
+    // Static config - no longer iCUE properties
+    // Keep enough items available so row bucketing can expand to 3 rows naturally.
+    var MAX_ITEMS = 60;
+
+    let languageCode = 'en';
+    const mediaBackgroundElement = document.getElementById('media-background');
+    const mediaBackgroundComponent = createMediaBackgroundComponent(mediaBackgroundElement);
+
+    // Storage key - use iCUE uniqueId when available, fallback for browser testing
+    function getStorageKey() {
+      if (typeof uniqueId !== 'undefined' && uniqueId) {
+        return uniqueId;
+      }
+      return 'icue-checklist-items';
+    }
+
+    // Checklist data
+    let checklistItems = [];
+    let draggedItem = null;
+    let widgetSizeClass = 's';
+
+    // Determine iCUE size class to keep layout behavior consistent across S/M/L/XL.
+    function getWidgetSizeClass() {
+      var width = Math.max(window.innerWidth, document.documentElement.clientWidth || 0);
+      var height = Math.max(window.innerHeight, document.documentElement.clientHeight || 0);
+      var longestEdge = Math.max(width, height);
+
+      if (longestEdge >= 2200) return 'xl';
+      if (longestEdge >= 1400) return 'l';
+      if (longestEdge >= 700) return 'm';
+      return 's';
+    }
+
+    function applySizeClass() {
+      widgetSizeClass = getWidgetSizeClass();
+      document.body.classList.remove('size-s', 'size-m', 'size-l', 'size-xl');
+      document.body.classList.add('size-' + widgetSizeClass);
+    }
+
+    // Load checklist from localStorage
+    function loadChecklist() {
+      try {
+        const key = getStorageKey();
+        const stored = localStorage.getItem(key);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            checklistItems = parsed;
+          } else if (parsed && Array.isArray(parsed.items)) {
+            checklistItems = parsed.items;
+          } else {
+            checklistItems = [];
+          }
+        }
+      } catch (e) {
+        console.error('Error loading checklist:', e);
+        checklistItems = [];
+      }
+    }
+
+    // Save checklist to localStorage
+    function saveChecklist() {
+      try {
+        const key = getStorageKey();
+        if (typeof uniqueId !== 'undefined' && uniqueId) {
+          localStorage.setItem(key, JSON.stringify({ items: checklistItems }));
+        } else {
+          localStorage.setItem(key, JSON.stringify(checklistItems));
+        }
+      } catch (e) {
+        console.error('Error saving checklist:', e);
+      }
+    }
+
+    // Generate unique ID
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+
+    // Add new item
+    function addItem(text) {
+      if (!text || !text.trim()) return;
+
+      checklistItems.push({
+        id: generateId(),
+        text: text.trim(),
+        checked: false,
+        createdAt: Date.now()
+      });
+
+      saveChecklist();
+      renderChecklist();
+    }
+
+    // Toggle item checked state
+    function toggleItem(id) {
+      var item = checklistItems.find(function(i) { return i.id === id; });
+      if (item) {
+        item.checked = !item.checked;
+        saveChecklist();
+        renderChecklist();
+      }
+    }
+
+    // Delete item
+    function deleteItem(id) {
+      checklistItems = checklistItems.filter(function(i) { return i.id !== id; });
+      saveChecklist();
+      renderChecklist();
+    }
+
+    // Delete all checked items
+    function deleteCheckedItems() {
+      var unchecked = checklistItems.filter(function(i) { return !i.checked; });
+      if (unchecked.length !== checklistItems.length) {
+        checklistItems = unchecked;
+        saveChecklist();
+        renderChecklist();
+        showToast('Checked Items Removed');
+      }
+    }
+
+    // Copy unchecked items to clipboard
+    function copyUncheckedItems() {
+      var unchecked = checklistItems.filter(function(i) { return !i.checked; });
+      if (unchecked.length === 0) {
+        showToast('No open items available to copy');
+        return;
+      }
+
+      var text = unchecked.map(function(i) { return '\u2022 ' + i.text; }).join('\n');
+      doCopy(text);
+    }
+
+    // Clipboard copy with multiple fallback strategies
+    function doCopy(text) {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        try {
+          navigator.clipboard.writeText(text).then(function() {
+            showCopySuccess();
+          }).catch(function() {
+            fallbackCopyDOM(text);
+          });
+          return;
+        } catch (e) {
+          // Clipboard API threw synchronously
+        }
+      }
+      fallbackCopyDOM(text);
+    }
+
+    // Fallback: textarea + execCommand
+    function fallbackCopyDOM(text) {
+      var textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      textarea.style.top = '-9999px';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+
+      var selected = document.getSelection().rangeCount > 0
+        ? document.getSelection().getRangeAt(0)
+        : false;
+
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, textarea.value.length);
+
+      var success = false;
+      try {
+        success = document.execCommand('copy');
+      } catch (e) {
+        console.error('execCommand copy failed:', e);
+      }
+
+      document.body.removeChild(textarea);
+
+      if (selected) {
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(selected);
+      }
+
+      if (success) {
+        showCopySuccess();
+      } else {
+        showToast('Clipboard copy is unavailable in this environment');
+      }
+    }
+
+    function showCopySuccess() {
+      var btn = document.getElementById('copyUncheckedBtn');
+      btn.classList.add('success');
+      showToast('Open items copied to clipboard');
+      setTimeout(function() {
+        btn.classList.remove('success');
+      }, 1500);
+    }
+
+    // Toast notification
+    function showToast(message) {
+      var toast = document.getElementById('toastNotification');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      clearTimeout(toast._hideTimer);
+      toast._hideTimer = setTimeout(function() {
+        toast.classList.remove('visible');
+      }, 2000);
+    }
+
+    // Drag and drop handlers
+    function handleDragStart(e, id) {
+      draggedItem = id;
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      draggedItem = null;
+      document.querySelectorAll('.drag-over').forEach(function(el) {
+        el.classList.remove('drag-over');
+      });
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+
+    function handleDragEnter(e) {
+      var item = e.target.closest('.checklist-item');
+      if (item) item.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+      var item = e.target.closest('.checklist-item');
+      if (item) item.classList.remove('drag-over');
+    }
+
+    function handleDrop(e, targetId) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      if (draggedItem === targetId) return;
+
+      var draggedIndex = checklistItems.findIndex(function(i) { return i.id === draggedItem; });
+      var targetIndex = checklistItems.findIndex(function(i) { return i.id === targetId; });
+
+      if (draggedIndex !== -1 && targetIndex !== -1) {
+        var item = checklistItems.splice(draggedIndex, 1)[0];
+        checklistItems.splice(targetIndex, 0, item);
+        saveChecklist();
+        renderChecklist();
+      }
+
+      return false;
+    }
+
+
+    // Keep checklist density consistent: row 2 starts after 10 items, row 3 after 30.
+    function applyChecklistRowLayout(visibleItemCount) {
+      var container = document.getElementById('checklistContainer');
+      container.classList.remove('rows-1', 'rows-2', 'rows-3');
+
+      if (visibleItemCount > 30) {
+        container.classList.add('rows-3');
+      } else if (visibleItemCount > 10) {
+        container.classList.add('rows-2');
+      } else {
+        container.classList.add('rows-1');
+      }
+    }
+
+    // Render checklist
+    function renderChecklist() {
+      var container = document.getElementById('checklistContainer');
+      var emptyState = container.querySelector('.empty-state');
+      var shouldShowDeleteButtons = (typeof showDeleteButtons === 'undefined') ? true : !!showDeleteButtons;
+
+      // Clear existing items (keep empty state)
+      container.querySelectorAll('.checklist-item').forEach(function(el) { el.remove(); });
+
+      if (checklistItems.length === 0) {
+        emptyState.style.display = 'flex';
+        applyChecklistRowLayout(0);
+      } else {
+        emptyState.style.display = 'none';
+
+        var itemsToShow = checklistItems.slice(0, MAX_ITEMS);
+        applyChecklistRowLayout(itemsToShow.length);
+
+        itemsToShow.forEach(function(item) {
+          var itemEl = document.createElement('div');
+          itemEl.className = 'checklist-item';
+          itemEl.draggable = true;
+          itemEl.setAttribute('data-id', item.id);
+
+          itemEl.innerHTML =
+            '<div class="drag-handle" title="Reorder Item">' +
+              '<span class="handle-icon">\u22EE\u22EE</span>' +
+            '</div>' +
+            '<label class="checkbox-container">' +
+              '<input type="checkbox" class="item-checkbox"' + (item.checked ? ' checked' : '') + '>' +
+              '<span class="checkmark"></span>' +
+            '</label>' +
+            '<span class="item-text' + (item.checked ? ' checked' : '') + '">' + escapeHtml(item.text) + '</span>' +
+            (shouldShowDeleteButtons ? '<button class="delete-btn" title="Remove Item">\u00D7</button>' : '');
+
+          // Event listeners
+          itemEl.querySelector('.item-checkbox').addEventListener('change', (function(id) {
+            return function() { toggleItem(id); };
+          })(item.id));
+
+          var deleteButton = itemEl.querySelector('.delete-btn');
+          if (deleteButton) {
+            deleteButton.addEventListener('click', (function(id) {
+              return function() { deleteItem(id); };
+            })(item.id));
+          }
+
+          // Drag and drop
+          itemEl.addEventListener('dragstart', (function(id) {
+            return function(e) { handleDragStart(e, id); };
+          })(item.id));
+          itemEl.addEventListener('dragend', handleDragEnd);
+          itemEl.addEventListener('dragover', handleDragOver);
+          itemEl.addEventListener('dragenter', handleDragEnter);
+          itemEl.addEventListener('dragleave', handleDragLeave);
+          itemEl.addEventListener('drop', (function(id) {
+            return function(e) { handleDrop(e, id); };
+          })(item.id));
+
+          container.appendChild(itemEl);
+        });
+      }
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      var div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Initialize event listeners
+    function initializeEventListeners() {
+      var addBtn = document.getElementById('addItemBtn');
+      var newItemInput = document.getElementById('newItemInput');
+      var deleteCheckedBtn = document.getElementById('deleteCheckedBtn');
+      var copyUncheckedBtn = document.getElementById('copyUncheckedBtn');
+
+      addBtn.addEventListener('click', function() {
+        addItem(newItemInput.value);
+        newItemInput.value = '';
+        newItemInput.focus();
+      });
+
+      newItemInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          addItem(newItemInput.value);
+          newItemInput.value = '';
+        }
+      });
+
+      deleteCheckedBtn.addEventListener('click', deleteCheckedItems);
+      copyUncheckedBtn.addEventListener('click', copyUncheckedItems);
+    }
+
+    // Media background functions
+    function resolveMediaPath(value) {
+      if (!value) return '';
+      if (typeof value === 'string') return value;
+      if (value.pathToAsset) return value.pathToAsset;
+      if (value.path) return value.path;
+      if (value.value) return value.value;
+      return '';
+    }
+
+    function normalizeMediaConfig(rawMedia) {
+      var mediaPath = resolveMediaPath(rawMedia);
+      if (!mediaPath) return null;
+
+      var base = (rawMedia && typeof rawMedia === 'object') ? rawMedia : {};
+      return {
+        pathToAsset: base.pathToAsset || mediaPath,
+        path: base.path || mediaPath,
+        baseSizeX: Number(base.baseSizeX) || 0,
+        baseSizeY: Number(base.baseSizeY) || 0,
+        scale: Number.isFinite(Number(base.scale)) ? Number(base.scale) : 1,
+        positionX: Number(base.positionX) || 0,
+        positionY: Number(base.positionY) || 0,
+        angle: Number(base.angle) || 0
+      };
+    }
+
+    function createMediaBackgroundComponent(container) {
+      if (!container) {
+        return { clear: function() {}, loadMedia: function() {} };
+      }
+
+      if (typeof MediaEditor === 'function') {
+        return new MediaEditor({
+          container: container,
+          onMediaLoaded: function() {
+            container.classList.add('has-media');
+          },
+          onMediaError: function(error) {
+            console.error('Media background error:', error);
+          }
+        });
+      }
+
+      console.warn('MediaEditor unavailable. Falling back to background-image CSS.');
+      return {
+        clear: function() {
+          container.style.backgroundImage = '';
+          container.classList.remove('has-media');
+        },
+        loadMedia: function(config) {
+          var mediaPath = resolveMediaPath(config);
+          if (!mediaPath) {
+            container.style.backgroundImage = '';
+            container.classList.remove('has-media');
+            return;
+          }
+          container.style.backgroundImage = "url('" + mediaPath + "')";
+          container.style.backgroundRepeat = 'no-repeat';
+          container.style.backgroundPosition = 'center';
+          container.style.backgroundSize = 'cover';
+          container.classList.add('has-media');
+        }
+      };
+    }
+
+    function applyStyles() {
+      var root = document.documentElement;
+
+      var t = Number(typeof transparency !== 'undefined' ? transparency : 100);
+      root.style.setProperty('--transparency', Number.isFinite(t) ? t / 100 : 1);
+
+      root.style.setProperty('--text-color', typeof textColor !== 'undefined' ? textColor : '#ffffff');
+      root.style.setProperty('--accent-color', typeof accentColor !== 'undefined' ? accentColor : '#00d4ff');
+      root.style.setProperty('--bg-color', typeof backgroundColor !== 'undefined' ? backgroundColor : '#000000');
+
+      var blur = Number(typeof glassBlur !== 'undefined' ? glassBlur : 0);
+      var brightness = Number(typeof bgBrightness !== 'undefined' ? bgBrightness : 100);
+      root.style.setProperty('--bg-blur', (Number.isFinite(blur) ? blur : 0) + 'px');
+      root.style.setProperty('--bg-brightness', (Number.isFinite(brightness) ? brightness : 100) + '%');
+
+      var mediaConfig = normalizeMediaConfig(typeof backgroundImage !== 'undefined' ? backgroundImage : undefined);
+      if (!mediaConfig) {
+        mediaBackgroundComponent.clear();
+      } else {
+        mediaBackgroundComponent.loadMedia(mediaConfig);
+      }
+    }
+
+    function updateWidget() {
+      renderChecklist();
+    }
+
+    function onIcueDataUpdated() {
+      applySizeClass();
+      applyStyles();
+      updateWidget();
+    }
+
+    function onIcueInitialized() {
+      if (typeof iCUE !== 'undefined' && iCUE.iCUELanguage) {
+        languageCode = iCUE.iCUELanguage;
+      }
+      onIcueDataUpdated();
+    }
+
+    // Initialize widget
+    loadChecklist();
+    initializeEventListeners();
+    window.addEventListener('resize', onIcueDataUpdated);
+
+    // Initial render for browser testing
+    if (typeof iCUE_initialized !== 'undefined' && iCUE_initialized) {
+      onIcueInitialized();
+    } else {
+      onIcueDataUpdated();
+    }
+  </script>
+</body>
+</html>
